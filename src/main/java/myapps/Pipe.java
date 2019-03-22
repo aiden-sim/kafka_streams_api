@@ -42,7 +42,7 @@ public class Pipe {
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
-        // 토플로지 만드는 과정
+        // 1) 토플로지 만드는 과정
 
         final StreamsBuilder builder = new StreamsBuilder();
         // streams-plaintext-input -> streams-pipe-output 으로 전달
@@ -53,10 +53,11 @@ public class Pipe {
         // 토플로지 확인
         System.out.println(topology.describe());
 
-        /*final KafkaStreams streams = new KafkaStreams(topology, props);
-        final CountDownLatch latch = new CountDownLatch(1);
+        // 2) 스트림즈 객체 생성
+        final KafkaStreams streams = new KafkaStreams(topology, props);
+        final CountDownLatch latch = new CountDownLatch(1); // 쓰레드 종료되길 기다릴 때 사용
 
-        // attach shutdown handler to catch control-c
+        // Ctrl+C를 처리하기 위한 핸들러 추가
         Runtime.getRuntime().addShutdownHook(new Thread("streams-shutdown-hook") {
             @Override
             public void run() {
@@ -71,6 +72,6 @@ public class Pipe {
         } catch (Throwable e) {
             System.exit(1);
         }
-        System.exit(0);*/
+        System.exit(0);
     }
 }
