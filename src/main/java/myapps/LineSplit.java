@@ -44,14 +44,20 @@ public class LineSplit {
 
         final StreamsBuilder builder = new StreamsBuilder();
 
+        /**
+         * KStream 메소드 (stateless)
+         * flatMap : 새로운 스트림을 만들 때 키와 값 모두 새롭게 만들어서 사용
+         * flatMapValues : 새로운 스트림을 만들때 키는 변경할 수 없고 값만 변경해서 만들 수 있음
+         */
         builder.<String, String>stream("streams-plaintext-input")
-               .flatMapValues(new ValueMapper<String, Iterable<String>>() {
+                // flatMapValues 메소드를 사용해서 새로운 스트림을 만든다.
+                .flatMapValues(new ValueMapper<String, Iterable<String>>() {
                     @Override
                     public Iterable<String> apply(String value) {
                         return Arrays.asList(value.split("\\W+"));
                     }
                 })
-               .to("streams-linesplit-output");
+                .to("streams-linesplit-output");
 
         /* ------- use the code below for Java 8 and uncomment the above ----
 
@@ -63,6 +69,8 @@ public class LineSplit {
 
 
         final Topology topology = builder.build();
+        System.out.println(topology.describe());
+
         final KafkaStreams streams = new KafkaStreams(topology, props);
         final CountDownLatch latch = new CountDownLatch(1);
 

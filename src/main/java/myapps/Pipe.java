@@ -63,11 +63,13 @@ public class Pipe {
             public void run() {
                 streams.close();
                 latch.countDown();
+                System.out.println("topology terminated");
             }
         });
 
         try {
             streams.start();
+            System.out.println("topology started");
             latch.await();
         } catch (Throwable e) {
             System.exit(1);
